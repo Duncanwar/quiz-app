@@ -1,0 +1,64 @@
+/* App.css */
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 50%;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.recipe-card {
+  width: calc(33% - 20px); /* Responsive layout for recipe cards */
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.recipe-card h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.recipe-card a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.recipe-card a:hover {
+  color: #000;
+}
+
+.recipe-card p {
+  font-size: 14px;
+  margin: 0;
+}
