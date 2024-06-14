@@ -1,37 +1,76 @@
-import "./App.css";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import RecipesList from "./RecipesList";
+import React, { useState } from "react";
+import "./App.css"; // Import your CSS file
+import Question from "./components/Question";
+import Result from "./components/Result";
+import Navigation from "./components/Navigation";
 
-const API_ID = "e617d41a";
-const API_KEY = "59abdb73606ae8952c86424532bfe90a";
+const questions = [
+  // Replace with your questions and answers
+  {
+    question: "What is the capital of France?",
+    answerOptions: ["London", "Paris", "Berlin"],
+    correctAnswer: "Paris",
+  },
+  // Add more questions here
+];
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [recipes, setRecipes] = useState([]);
-  const searchRecipes = async (searchTerm) => {
-    const response = await axios.get(
-      `https://api.edamam.com/search?q=${searchTerm}&app_id=${API_ID}&app_key=${API_KEY}`
-    );
-    setRecipes(response.data.hits);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [isFinished, setIsFinished] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const handleNextImage = () => {
+    setCurrentQuestionIndex((prevIndex) => {
+      const nextIndex = prevIndex + 1;
+      return nextIndex >= questions.length ? 0 : nextIndex;
+    });
   };
-  useEffect(() => {
-    if (searchTerm) searchRecipes(searchTerm);
-  }, [searchTerm]);
-  const handleSearchChange = (event) => setSearchTerm(event.target.value);
+
+  const handlePrevImage = () => {
+    setCurrentQuestionIndex((prevIndex) => {
+      const preIndex = prevIndex - 1;
+      return preIndex < 0 ? questions.length - 1 : prevIndex;
+    });
+  };
+
+  const handleSelectAnswer = (answer) => {
+    setSelectedAnswers((prevAnswers) => [...prevAnswers, answer]);
+  };
+
+  const handleSubmitQuiz = () => {
+    let calculatedScore = 0;
+    selectedAnswers.forEach((answer, index) => {
+      if (answer === questions[index].correctAnswer) {
+        calculatedScore++;
+      }
+    });
+    setScore(calculatedScore);
+    setIsFinished(true);
+  };
+
   return (
     <div className="App">
-      <h1>Recipes app</h1>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Search Recipes"
-      />
-      {recipes.length > 0 ? (
-        <RecipesList recipes={recipes} />
+      {isFinished ? (
+        <Result
+          score={score}
+          questions={questions}
+          onRestart={() => window.location.reload()}
+        />
       ) : (
-        <p>No Recipe found</p>
+        <>
+          <Question
+            currentQuestion={questions[currentQuestionIndex]}
+            onSelectAnswer={handleSelectAnswer}
+          />
+          <Navigation onNext={handleNextImage} onPrev={handlePrevImage} />
+          <button
+            onClick={handleSubmitQuiz}
+            disabled={selectedAnswers.length === 0}
+          >
+            Submit Quiz
+          </button>
+        </>
       )}
     </div>
   );
